@@ -1,0 +1,63 @@
+TECH SCREENING
+INTRODUCTION
+FUNCTIONAL REQUIREMENTS
+Backend
+The backend should be able to read and store JSON files containing bands and songs. CRUD (Create/Read/Update/Delete) operations should be performed on the stored data. CRUD functionality includes: 
+•	(C): Adding new band(s) or songs with all the details found in the JSON, ensuring that band names are not duplicated.
+•	(R): Searching for a band by name or songs by genre (for when you're in the mood for Finnish Death Metal).
+•	(U): Updating all information related to bands and songs based on their respective IDs.
+•	(D): Deleting a band or song based on its ID.
+
+We are only interested in the following when reading the data:
+•	All bands with the genre "Metal."
+•	All songs released before 2016. 
+
+The JSON files can be served through the Web API itself as static files. You can find the required files here: 
+•	https://www.teamrockstars.nl/sites/default/files/artists.json
+•	https://www.teamrockstars.nl/sites/default/files/songs.json
+
+Frontend 
+No frontend implementation is expected for this assignment, and it should be possible to test the web API using tools like Postman or cURL.
+TECHNICAL REQUIREMENTS
+Quality Assurance
+We anticipate that this web app will become very popular. With a widely-used app, good unit tests and readable code are essential. This application will be maintained by other developers for a long time, so we expect unit tests for the backend, clear naming, and documentation as needed.
+EXTRA REQUIREMENTS
+To challenge you as a potential IT Rockstar, we'd like you to select a few additional requirements from the list below and add them to your application. The choice of requirements is up to you; the number is not fixed.
+Without limiting your choices too much, here's an indication of the quantities to aim for:
+•	Junior: at least 1 extra requirement 
+•	Medior: at least 3 extra requirements 
+
+
+•	Senior: at least 4 extra requirements 
+
+Choose from the following options:
+•	Database: Choose a database (not in-memory) and write all the queries yourself to demonstrate your database proficiency.
+•	Design Patterns: Choose 4 design patterns and implement them in the code, explaining their usage.
+•	Docker: Run the application in Docker (and the database separately if chosen).
+•	Tests: Ensure optimal test coverage using Unit tests, Integration tests, and Behavior-Driven Development.
+•	Cache: Implement a caching system for responses when the database is down.
+•	API Documentation: Provide a visualization of API documentation.
+•	API Versioning & Content Type Negotiation: Implement multiple versions of your API and enable content type negotiation.
+•	API Security: Secure the API in ways you see fit.
+•	MicroProfile: Build the application using MicroProfile.
+•	RESTful API: Follow RESTful principles and build the API accordingly.
+
+ASSIGNMENT
+Focus
+The primary focus of this exercise is on functionality. We also appreciate receiving explanations beforehand about any shortcuts taken and the approach, architecture choices, and strategies you've used.
+All code will be evaluated based on the following aspects:
+•	Security 
+•	Performance 
+•	Code style 
+
+Rules 
+Despite our preference for minimal rules and obligations, there are a few things to keep in mind:
+•	You should spend a maximum of 4 hours on this assignment. This allows us to get the most realistic assessment of your skills, capabilities, and speed.
+•	It's not a shame if you don't finish it within this time.
+•	Quality is more important than quantity, so ensure that what is completed is done well.
+•	The application should be easy to run with simple commands and clear instructions on how to do so.
+
+
+•	You must provide the solution at least 48 hours before your tech board meeting. Your agent will provide the contact information for the tech board.
+•	Following the meeting, you will receive a final GO/NO GO decision from the Rockstar! If it's a GO, you will receive a contract proposal from your agent within 48 hours.
+
