@@ -90,22 +90,22 @@ class ArtistServiceTest {
     void searchArtistsByName_ShouldReturnMatchingArtists() {
         // Given
         List<Artist> expectedArtists = Arrays.asList(testArtist);
-        when(artistRepository.findByNameContaining("Metal")).thenReturn(expectedArtists);
+        when(artistRepository.findByNameContainingIgnoreCase("Metal")).thenReturn(expectedArtists);
 
         // When
         List<Artist> result = artistService.searchArtistsByName("Metal");
 
         // Then
         assertEquals(expectedArtists, result);
-        verify(artistRepository).findByNameContaining("Metal");
+        verify(artistRepository).findByNameContainingIgnoreCase("Metal");
     }
 
     @Test
     void getMetalArtists_ShouldReturnArtistsWithMetalSongs() {
         // Given
         List<Song> metalSongs = Arrays.asList(testMetalSong);
-        when(songRepository.findByGenre("Metal")).thenReturn(metalSongs);
-        when(artistRepository.findByName("Metallica")).thenReturn(Optional.of(testArtist));
+        when(songRepository.findByGenreIgnoreCase("Metal")).thenReturn(metalSongs);
+        when(artistRepository.findByNameIgnoreCase("Metallica")).thenReturn(Optional.of(testArtist));
 
         // When
         List<Artist> result = artistService.getMetalArtists();
@@ -113,22 +113,22 @@ class ArtistServiceTest {
         // Then
         assertEquals(1, result.size());
         assertEquals(testArtist, result.get(0));
-        verify(songRepository).findByGenre("Metal");
-        verify(artistRepository).findByName("Metallica");
+        verify(songRepository).findByGenreIgnoreCase("Metal");
+        verify(artistRepository).findByNameIgnoreCase("Metallica");
     }
 
     @Test
     void getMetalArtists_WhenNoMetalSongs_ShouldReturnEmptyList() {
         // Given
-        when(songRepository.findByGenre("Metal")).thenReturn(Arrays.asList());
+        when(songRepository.findByGenreIgnoreCase("Metal")).thenReturn(Arrays.asList());
 
         // When
         List<Artist> result = artistService.getMetalArtists();
 
         // Then
         assertTrue(result.isEmpty());
-        verify(songRepository).findByGenre("Metal");
-        verify(artistRepository, never()).findByName(anyString());
+        verify(songRepository).findByGenreIgnoreCase("Metal");
+        verify(artistRepository, never()).findByNameIgnoreCase(anyString());
     }
 
     @Test
@@ -136,7 +136,7 @@ class ArtistServiceTest {
         // Given
         Artist newArtist = new Artist(null, "New Artist");
         Artist savedArtist = new Artist(3L, "New Artist");
-        when(artistRepository.existsByName("New Artist")).thenReturn(false);
+        when(artistRepository.existsByNameIgnoreCase("New Artist")).thenReturn(false);
         when(artistRepository.save(newArtist)).thenReturn(savedArtist);
 
         // When
@@ -144,7 +144,7 @@ class ArtistServiceTest {
 
         // Then
         assertEquals(savedArtist, result);
-        verify(artistRepository).existsByName("New Artist");
+        verify(artistRepository).existsByNameIgnoreCase("New Artist");
         verify(artistRepository).save(newArtist);
     }
 
@@ -152,7 +152,7 @@ class ArtistServiceTest {
     void createArtist_WhenNameAlreadyExists_ShouldThrowException() {
         // Given
         Artist newArtist = new Artist(null, "Metallica");
-        when(artistRepository.existsByName("Metallica")).thenReturn(true);
+        when(artistRepository.existsByNameIgnoreCase("Metallica")).thenReturn(true);
 
         // When & Then
         IllegalArgumentException exception = assertThrows(
@@ -160,7 +160,7 @@ class ArtistServiceTest {
             () -> artistService.createArtist(newArtist)
         );
         assertEquals("Artist with name 'Metallica' already exists", exception.getMessage());
-        verify(artistRepository).existsByName("Metallica");
+        verify(artistRepository).existsByNameIgnoreCase("Metallica");
         verify(artistRepository, never()).save(any());
     }
 
@@ -170,7 +170,7 @@ class ArtistServiceTest {
         Artist updatedArtist = new Artist(null, "Updated Name");
         Artist savedArtist = new Artist(1L, "Updated Name");
         when(artistRepository.findById(1L)).thenReturn(Optional.of(testArtist));
-        when(artistRepository.findByName("Updated Name")).thenReturn(Optional.empty());
+        when(artistRepository.findByNameIgnoreCase("Updated Name")).thenReturn(Optional.empty());
         when(artistRepository.save(any(Artist.class))).thenReturn(savedArtist);
 
         // When
@@ -179,7 +179,7 @@ class ArtistServiceTest {
         // Then
         assertEquals(savedArtist, result);
         verify(artistRepository).findById(1L);
-        verify(artistRepository).findByName("Updated Name");
+        verify(artistRepository).findByNameIgnoreCase("Updated Name");
         verify(artistRepository).save(any(Artist.class));
     }
 
@@ -202,27 +202,29 @@ class ArtistServiceTest {
     @Test
     void deleteArtist_WhenArtistExists_ShouldReturnTrue() {
         // Given
-        when(artistRepository.deleteById(1L)).thenReturn(true);
+        when(artistRepository.existsById(1L)).thenReturn(true);
 
         // When
         boolean result = artistService.deleteArtist(1L);
 
         // Then
         assertTrue(result);
+        verify(artistRepository).existsById(1L);
         verify(artistRepository).deleteById(1L);
     }
 
     @Test
     void deleteArtist_WhenArtistDoesNotExist_ShouldReturnFalse() {
         // Given
-        when(artistRepository.deleteById(999L)).thenReturn(false);
+        when(artistRepository.existsById(999L)).thenReturn(false);
 
         // When
         boolean result = artistService.deleteArtist(999L);
 
         // Then
         assertFalse(result);
-        verify(artistRepository).deleteById(999L);
+        verify(artistRepository).existsById(999L);
+        verify(artistRepository, never()).deleteById(999L);
     }
 
     @Test

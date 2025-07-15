@@ -14,13 +14,13 @@ import java.util.Optional;
  */
 @Service
 public class SongService {
-    
+
     private final SongRepository songRepository;
-    
+
     public SongService(SongRepository songRepository) {
         this.songRepository = songRepository;
     }
-    
+
     /**
      * Retrieves all songs.
      * 
@@ -29,7 +29,7 @@ public class SongService {
     public List<Song> getAllSongs() {
         return songRepository.findAll();
     }
-    
+
     /**
      * Finds a song by ID.
      * 
@@ -39,7 +39,7 @@ public class SongService {
     public Optional<Song> getSongById(Long id) {
         return songRepository.findById(id);
     }
-    
+
     /**
      * Searches for songs by genre (case-insensitive).
      * 
@@ -47,9 +47,9 @@ public class SongService {
      * @return List of songs matching the genre
      */
     public List<Song> getSongsByGenre(String genre) {
-        return songRepository.findByGenre(genre);
+        return songRepository.findByGenreIgnoreCase(genre);
     }
-    
+
     /**
      * Finds songs released before the specified year.
      * This method implements the requirement to filter songs released before 2016.
@@ -60,7 +60,7 @@ public class SongService {
     public List<Song> getSongsReleasedBefore(Integer year) {
         return songRepository.findByYearBefore(year);
     }
-    
+
     /**
      * Finds songs released before 2016.
      * This is a convenience method for the specific requirement.
@@ -70,7 +70,7 @@ public class SongService {
     public List<Song> getSongsReleasedBefore2016() {
         return getSongsReleasedBefore(2016);
     }
-    
+
     /**
      * Finds songs by artist name (case-insensitive).
      * 
@@ -78,9 +78,9 @@ public class SongService {
      * @return List of songs by the specified artist
      */
     public List<Song> getSongsByArtist(String artistName) {
-        return songRepository.findByArtist(artistName);
+        return songRepository.findByArtistIgnoreCase(artistName);
     }
-    
+
     /**
      * Searches for songs by name (case-insensitive partial match).
      * 
@@ -88,9 +88,9 @@ public class SongService {
      * @return List of matching songs
      */
     public List<Song> searchSongsByName(String name) {
-        return songRepository.findByNameContaining(name);
+        return songRepository.findByNameContainingIgnoreCase(name);
     }
-    
+
     /**
      * Finds songs by genre and released before the specified year.
      * 
@@ -99,9 +99,9 @@ public class SongService {
      * @return List of songs matching both criteria
      */
     public List<Song> getSongsByGenreAndYearBefore(String genre, Integer year) {
-        return songRepository.findByGenreAndYearBefore(genre, year);
+        return songRepository.findByGenreIgnoreCaseAndYearBefore(genre, year);
     }
-    
+
     /**
      * Creates a new song.
      * 
@@ -111,7 +111,7 @@ public class SongService {
     public Song createSong(Song song) {
         return songRepository.save(song);
     }
-    
+
     /**
      * Updates an existing song.
      * 
@@ -125,11 +125,11 @@ public class SongService {
         if (existingSong.isEmpty()) {
             throw new IllegalArgumentException("Song with ID " + id + " not found");
         }
-        
+
         updatedSong.setId(id);
         return songRepository.save(updatedSong);
     }
-    
+
     /**
      * Deletes a song by ID.
      * 
@@ -137,9 +137,13 @@ public class SongService {
      * @return true if the song was deleted, false if not found
      */
     public boolean deleteSong(Long id) {
-        return songRepository.deleteById(id);
+        if (songRepository.existsById(id)) {
+            songRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
-    
+
     /**
      * Checks if a song exists by ID.
      * 

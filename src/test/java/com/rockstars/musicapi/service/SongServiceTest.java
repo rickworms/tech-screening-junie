@@ -85,14 +85,14 @@ class SongServiceTest {
     void getSongsByGenre_ShouldReturnSongsOfSpecificGenre() {
         // Given
         List<Song> metalSongs = Arrays.asList(metalSong);
-        when(songRepository.findByGenre("Metal")).thenReturn(metalSongs);
+        when(songRepository.findByGenreIgnoreCase("Metal")).thenReturn(metalSongs);
 
         // When
         List<Song> result = songService.getSongsByGenre("Metal");
 
         // Then
         assertEquals(metalSongs, result);
-        verify(songRepository).findByGenre("Metal");
+        verify(songRepository).findByGenreIgnoreCase("Metal");
     }
 
     @Test
@@ -127,42 +127,42 @@ class SongServiceTest {
     void getSongsByArtist_ShouldReturnSongsBySpecificArtist() {
         // Given
         List<Song> queenSongs = Arrays.asList(oldSong);
-        when(songRepository.findByArtist("Queen")).thenReturn(queenSongs);
+        when(songRepository.findByArtistIgnoreCase("Queen")).thenReturn(queenSongs);
 
         // When
         List<Song> result = songService.getSongsByArtist("Queen");
 
         // Then
         assertEquals(queenSongs, result);
-        verify(songRepository).findByArtist("Queen");
+        verify(songRepository).findByArtistIgnoreCase("Queen");
     }
 
     @Test
     void searchSongsByName_ShouldReturnMatchingSongs() {
         // Given
         List<Song> matchingSongs = Arrays.asList(oldSong);
-        when(songRepository.findByNameContaining("Bohemian")).thenReturn(matchingSongs);
+        when(songRepository.findByNameContainingIgnoreCase("Bohemian")).thenReturn(matchingSongs);
 
         // When
         List<Song> result = songService.searchSongsByName("Bohemian");
 
         // Then
         assertEquals(matchingSongs, result);
-        verify(songRepository).findByNameContaining("Bohemian");
+        verify(songRepository).findByNameContainingIgnoreCase("Bohemian");
     }
 
     @Test
     void getSongsByGenreAndYearBefore_ShouldReturnFilteredSongs() {
         // Given
         List<Song> filteredSongs = Arrays.asList(metalSong);
-        when(songRepository.findByGenreAndYearBefore("Metal", 2000)).thenReturn(filteredSongs);
+        when(songRepository.findByGenreIgnoreCaseAndYearBefore("Metal", 2000)).thenReturn(filteredSongs);
 
         // When
         List<Song> result = songService.getSongsByGenreAndYearBefore("Metal", 2000);
 
         // Then
         assertEquals(filteredSongs, result);
-        verify(songRepository).findByGenreAndYearBefore("Metal", 2000);
+        verify(songRepository).findByGenreIgnoreCaseAndYearBefore("Metal", 2000);
     }
 
     @Test
@@ -221,27 +221,29 @@ class SongServiceTest {
     @Test
     void deleteSong_WhenSongExists_ShouldReturnTrue() {
         // Given
-        when(songRepository.deleteById(1L)).thenReturn(true);
+        when(songRepository.existsById(1L)).thenReturn(true);
 
         // When
         boolean result = songService.deleteSong(1L);
 
         // Then
         assertTrue(result);
+        verify(songRepository).existsById(1L);
         verify(songRepository).deleteById(1L);
     }
 
     @Test
     void deleteSong_WhenSongDoesNotExist_ShouldReturnFalse() {
         // Given
-        when(songRepository.deleteById(999L)).thenReturn(false);
+        when(songRepository.existsById(999L)).thenReturn(false);
 
         // When
         boolean result = songService.deleteSong(999L);
 
         // Then
         assertFalse(result);
-        verify(songRepository).deleteById(999L);
+        verify(songRepository).existsById(999L);
+        verify(songRepository, never()).deleteById(999L);
     }
 
     @Test

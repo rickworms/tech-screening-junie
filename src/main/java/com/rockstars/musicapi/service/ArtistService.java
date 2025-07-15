@@ -16,15 +16,15 @@ import java.util.stream.Collectors;
  */
 @Service
 public class ArtistService {
-    
+
     private final ArtistRepository artistRepository;
     private final SongRepository songRepository;
-    
+
     public ArtistService(ArtistRepository artistRepository, SongRepository songRepository) {
         this.artistRepository = artistRepository;
         this.songRepository = songRepository;
     }
-    
+
     /**
      * Retrieves all artists.
      * 
@@ -33,7 +33,7 @@ public class ArtistService {
     public List<Artist> getAllArtists() {
         return artistRepository.findAll();
     }
-    
+
     /**
      * Finds an artist by ID.
      * 
@@ -43,7 +43,7 @@ public class ArtistService {
     public Optional<Artist> getArtistById(Long id) {
         return artistRepository.findById(id);
     }
-    
+
     /**
      * Searches for artists by name (case-insensitive partial match).
      * 
@@ -51,9 +51,9 @@ public class ArtistService {
      * @return List of matching artists
      */
     public List<Artist> searchArtistsByName(String name) {
-        return artistRepository.findByNameContaining(name);
+        return artistRepository.findByNameContainingIgnoreCase(name);
     }
-    
+
     /**
      * Finds all artists with Metal genre songs.
      * This method filters songs by "Metal" genre and returns unique artists.
@@ -62,20 +62,20 @@ public class ArtistService {
      */
     public List<Artist> getMetalArtists() {
         // Get all Metal songs
-        List<String> metalArtistNames = songRepository.findByGenre("Metal")
+        List<String> metalArtistNames = songRepository.findByGenreIgnoreCase("Metal")
                 .stream()
                 .map(song -> song.getArtist())
                 .distinct()
                 .collect(Collectors.toList());
-        
+
         // Find corresponding Artist objects
         return metalArtistNames.stream()
-                .map(artistRepository::findByName)
+                .map(artistRepository::findByNameIgnoreCase)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
     }
-    
+
     /**
      * Creates a new artist.
      * 
@@ -84,12 +84,12 @@ public class ArtistService {
      * @throws IllegalArgumentException if artist name already exists
      */
     public Artist createArtist(Artist artist) {
-        if (artistRepository.existsByName(artist.getName())) {
+        if (artistRepository.existsByNameIgnoreCase(artist.getName())) {
             throw new IllegalArgumentException("Artist with name '" + artist.getName() + "' already exists");
         }
         return artistRepository.save(artist);
     }
-    
+
     /**
      * Updates an existing artist.
      * 
@@ -103,17 +103,17 @@ public class ArtistService {
         if (existingArtist.isEmpty()) {
             throw new IllegalArgumentException("Artist with ID " + id + " not found");
         }
-        
+
         // Check for name conflicts (excluding current artist)
-        Optional<Artist> artistWithSameName = artistRepository.findByName(updatedArtist.getName());
+        Optional<Artist> artistWithSameName = artistRepository.findByNameIgnoreCase(updatedArtist.getName());
         if (artistWithSameName.isPresent() && !artistWithSameName.get().getId().equals(id)) {
             throw new IllegalArgumentException("Artist with name '" + updatedArtist.getName() + "' already exists");
         }
-        
+
         updatedArtist.setId(id);
         return artistRepository.save(updatedArtist);
     }
-    
+
     /**
      * Deletes an artist by ID.
      * 
@@ -121,9 +121,13 @@ public class ArtistService {
      * @return true if the artist was deleted, false if not found
      */
     public boolean deleteArtist(Long id) {
-        return artistRepository.deleteById(id);
+        if (artistRepository.existsById(id)) {
+            artistRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
-    
+
     /**
      * Checks if an artist exists by ID.
      * 

@@ -1,9 +1,12 @@
 package com.rockstars.musicapi.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -11,41 +14,46 @@ import java.util.Objects;
  * 
  * This model corresponds to the structure found in artists.json.
  */
+@Entity
+@Table(name = "artists")
 public class Artist {
-    
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty("Id")
     @NotNull(message = "Artist ID cannot be null")
     private Long id;
-    
+
+    @Column(unique = true, nullable = false)
     @JsonProperty("Name")
     @NotBlank(message = "Artist name cannot be blank")
     private String name;
-    
+
     // Default constructor for Jackson
     public Artist() {}
-    
+
     public Artist(Long id, String name) {
         this.id = id;
         this.name = name;
     }
-    
+
     // Getters and setters
     public Long getId() {
         return id;
     }
-    
+
     public void setId(Long id) {
         this.id = id;
     }
-    
+
     public String getName() {
         return name;
     }
-    
+
     public void setName(String name) {
         this.name = name;
     }
-    
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -53,12 +61,12 @@ public class Artist {
         Artist artist = (Artist) o;
         return Objects.equals(id, artist.id) && Objects.equals(name, artist.name);
     }
-    
+
     @Override
     public int hashCode() {
         return Objects.hash(id, name);
     }
-    
+
     @Override
     public String toString() {
         return "Artist{" +
