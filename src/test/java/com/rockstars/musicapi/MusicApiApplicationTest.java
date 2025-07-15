@@ -3,6 +3,8 @@ package com.rockstars.musicapi;
 import com.rockstars.musicapi.service.ArtistService;
 import com.rockstars.musicapi.service.SongService;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -20,6 +22,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Testcontainers
 class MusicApiApplicationTest {
+
+    private static final Logger logger = LoggerFactory.getLogger(MusicApiApplicationTest.class);
 
     @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15")
@@ -56,8 +60,8 @@ class MusicApiApplicationTest {
         assertFalse(artists.isEmpty(), "Artists should be loaded from JSON");
         assertFalse(songs.isEmpty(), "Songs should be loaded from JSON");
 
-        System.out.println("[DEBUG_LOG] Loaded " + artists.size() + " artists");
-        System.out.println("[DEBUG_LOG] Loaded " + songs.size() + " songs");
+        logger.info("[DEBUG_LOG] Loaded {} artists", artists.size());
+        logger.info("[DEBUG_LOG] Loaded {} songs", songs.size());
     }
 
     @Test
@@ -66,12 +70,12 @@ class MusicApiApplicationTest {
         var metalArtists = artistService.getMetalArtists();
 
         assertFalse(metalArtists.isEmpty(), "Should find Metal artists");
-        System.out.println("[DEBUG_LOG] Found " + metalArtists.size() + " Metal artists");
+        logger.info("[DEBUG_LOG] Found {} Metal artists", metalArtists.size());
 
         // Print first few Metal artists for verification
         metalArtists.stream()
                 .limit(5)
-                .forEach(artist -> System.out.println("[DEBUG_LOG] Metal artist: " + artist.getName()));
+                .forEach(artist -> logger.info("[DEBUG_LOG] Metal artist: {}", artist.getName()));
     }
 
     @Test
@@ -80,7 +84,7 @@ class MusicApiApplicationTest {
         var songsBefore2016 = songService.getSongsReleasedBefore2016();
 
         assertFalse(songsBefore2016.isEmpty(), "Should find songs before 2016");
-        System.out.println("[DEBUG_LOG] Found " + songsBefore2016.size() + " songs before 2016");
+        logger.info("[DEBUG_LOG] Found {} songs before 2016", songsBefore2016.size());
 
         // Verify all songs are actually before 2016
         boolean allBefore2016 = songsBefore2016.stream()
@@ -90,6 +94,6 @@ class MusicApiApplicationTest {
         // Print first few songs for verification
         songsBefore2016.stream()
                 .limit(5)
-                .forEach(song -> System.out.println("[DEBUG_LOG] Song before 2016: " + song.getName() + " (" + song.getYear() + ")"));
+                .forEach(song -> logger.info("[DEBUG_LOG] Song before 2016: {} ({})", song.getName(), song.getYear()));
     }
 }

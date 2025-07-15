@@ -6,6 +6,8 @@ import com.rockstars.musicapi.model.Artist;
 import com.rockstars.musicapi.model.Song;
 import com.rockstars.musicapi.repository.ArtistRepository;
 import com.rockstars.musicapi.repository.SongRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
@@ -21,11 +23,13 @@ import java.util.List;
  */
 @Component
 public class DataLoader implements CommandLineRunner {
-    
+
+    private static final Logger logger = LoggerFactory.getLogger(DataLoader.class);
+
     private final ArtistRepository artistRepository;
     private final SongRepository songRepository;
     private final ObjectMapper objectMapper;
-    
+
     public DataLoader(ArtistRepository artistRepository, 
                      SongRepository songRepository, 
                      ObjectMapper objectMapper) {
@@ -33,13 +37,13 @@ public class DataLoader implements CommandLineRunner {
         this.songRepository = songRepository;
         this.objectMapper = objectMapper;
     }
-    
+
     @Override
     public void run(String... args) throws Exception {
         loadArtists();
         loadSongs();
     }
-    
+
     private void loadArtists() {
         try {
             // Only load if database is empty
@@ -49,17 +53,17 @@ public class DataLoader implements CommandLineRunner {
                     resource.getInputStream(), 
                     new TypeReference<List<Artist>>() {}
                 );
-                
+
                 artistRepository.saveAll(artists);
-                System.out.println("Loaded " + artists.size() + " artists from JSON file");
+                logger.info("Loaded {} artists from JSON file", artists.size());
             } else {
-                System.out.println("Artists already exist in database, skipping JSON load");
+                logger.info("Artists already exist in database, skipping JSON load");
             }
         } catch (IOException e) {
             throw new RuntimeException("Failed to load artists data", e);
         }
     }
-    
+
     private void loadSongs() {
         try {
             // Only load if database is empty
@@ -69,11 +73,11 @@ public class DataLoader implements CommandLineRunner {
                     resource.getInputStream(), 
                     new TypeReference<List<Song>>() {}
                 );
-                
+
                 songRepository.saveAll(songs);
-                System.out.println("Loaded " + songs.size() + " songs from JSON file");
+                logger.info("Loaded {} songs from JSON file", songs.size());
             } else {
-                System.out.println("Songs already exist in database, skipping JSON load");
+                logger.info("Songs already exist in database, skipping JSON load");
             }
         } catch (IOException e) {
             throw new RuntimeException("Failed to load songs data", e);
