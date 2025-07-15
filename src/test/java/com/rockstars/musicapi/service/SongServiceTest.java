@@ -116,7 +116,7 @@ class SongServiceTest {
         when(songRepository.findByYearBefore(2016)).thenReturn(songsBefore2016);
 
         // When
-        List<Song> result = songService.getSongsReleasedBefore2016();
+        List<Song> result = songService.getSongsReleasedBefore(2016);
 
         // Then
         assertEquals(songsBefore2016, result);

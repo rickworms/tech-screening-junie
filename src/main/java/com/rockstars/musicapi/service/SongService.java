@@ -59,15 +59,6 @@ public class SongService {
         return songRepository.findByYearBefore(year);
     }
 
-    /**
-     * Finds songs released before 2016.
-     * This is a convenience method for the specific requirement.
-     * 
-     * @return List of songs released before 2016
-     */
-    public List<Song> getSongsReleasedBefore2016() {
-        return getSongsReleasedBefore(2016);
-    }
 
     /**
      * Finds songs by artist name (case-insensitive).

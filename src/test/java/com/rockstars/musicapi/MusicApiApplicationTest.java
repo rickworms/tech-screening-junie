@@ -81,7 +81,7 @@ class MusicApiApplicationTest {
     @Test
     void songsBefore2016FilterWorks() {
         // Verify that songs before 2016 filtering works
-        var songsBefore2016 = songService.getSongsReleasedBefore2016();
+        var songsBefore2016 = songService.getSongsReleasedBefore(2016);
 
         assertFalse(songsBefore2016.isEmpty(), "Should find songs before 2016");
         logger.info("[DEBUG_LOG] Found {} songs before 2016", songsBefore2016.size());

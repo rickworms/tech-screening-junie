@@ -87,13 +87,6 @@ public class SongController {
         return ResponseEntity.ok(songs);
     }
 
-    @GetMapping("/before-2016")
-    @Operation(summary = "Get songs released before 2016", description = "Retrieves all songs released before 2016 (specific requirement)")
-    @ApiResponse(responseCode = "200", description = "Successfully retrieved songs released before 2016")
-    public ResponseEntity<List<Song>> getSongsReleasedBefore2016() {
-        List<Song> songs = songService.getSongsReleasedBefore2016();
-        return ResponseEntity.ok(songs);
-    }
 
     @GetMapping("/filter")
     @Operation(summary = "Filter songs by genre and year", description = "Retrieves songs by genre released before the specified year")
