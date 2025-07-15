@@ -45,42 +45,41 @@ public class DataLoader implements CommandLineRunner {
     }
 
     private void loadArtists() {
-        try {
-            // Only load if database is empty
-            if (artistRepository.count() == 0) {
-                ClassPathResource resource = new ClassPathResource("instructions/artists.json");
-                List<Artist> artists = objectMapper.readValue(
-                    resource.getInputStream(), 
-                    new TypeReference<List<Artist>>() {}
-                );
-
-                artistRepository.saveAll(artists);
-                logger.info("Loaded {} artists from JSON file", artists.size());
-            } else {
-                logger.info("Artists already exist in database, skipping JSON load");
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to load artists data", e);
+        // Only load if database is empty
+        if (artistRepository.count() == 0) {
+            List<Artist> artists = loadEntities("instructions/artists.json", 
+                        new TypeReference<List<Artist>>() {}, "artists");
+            artistRepository.saveAll(artists);
+            logger.info("Loaded {} artists from JSON file", artists.size());
+        } else {
+            logger.info("Artists already exist in database, skipping JSON load");
         }
     }
 
     private void loadSongs() {
-        try {
-            // Only load if database is empty
-            if (songRepository.count() == 0) {
-                ClassPathResource resource = new ClassPathResource("instructions/songs.json");
-                List<Song> songs = objectMapper.readValue(
-                    resource.getInputStream(), 
-                    new TypeReference<List<Song>>() {}
-                );
+        // Only load if database is empty
+        if (songRepository.count() == 0) {
+            List<Song> songs = loadEntities("instructions/songs.json", 
+                        new TypeReference<List<Song>>() {}, "songs");
+            songRepository.saveAll(songs);
+            logger.info("Loaded {} songs from JSON file", songs.size());
+        } else {
+            logger.info("Songs already exist in database, skipping JSON load");
+        }
+    }
 
-                songRepository.saveAll(songs);
-                logger.info("Loaded {} songs from JSON file", songs.size());
-            } else {
-                logger.info("Songs already exist in database, skipping JSON load");
-            }
+    private <T> List<T> loadEntities(String jsonFilePath,
+                                     TypeReference<List<T>> typeReference,
+                                     String entityTypeName) {
+        try {
+            ClassPathResource resource = new ClassPathResource(jsonFilePath);
+            List<T> entities = objectMapper.readValue(
+                resource.getInputStream(), 
+                typeReference
+            );
+            return entities;
         } catch (IOException e) {
-            throw new RuntimeException("Failed to load songs data", e);
+            throw new RuntimeException("Failed to load " + entityTypeName + " data", e);
         }
     }
 }
