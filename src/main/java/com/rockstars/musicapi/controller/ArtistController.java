@@ -60,12 +60,13 @@ public class ArtistController {
         return ResponseEntity.ok(artists);
     }
 
-    @GetMapping("/metal")
-    @Operation(summary = "Get Metal artists", description = "Retrieves all artists who have songs in the Metal genre")
-    @ApiResponse(responseCode = "200", description = "Successfully retrieved Metal artists")
-    public ResponseEntity<List<Artist>> getMetalArtists() {
-        List<Artist> metalArtists = artistService.getMetalArtists();
-        return ResponseEntity.ok(metalArtists);
+    @GetMapping("/genre/{genre}")
+    @Operation(summary = "Get artists by genre", description = "Retrieves all artists who have songs in the specified genre")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved artists for the specified genre")
+    public ResponseEntity<List<Artist>> getArtistsByGenre(
+            @Parameter(description = "Genre to search for") @PathVariable String genre) {
+        List<Artist> artists = artistService.getArtistsByGenre(genre);
+        return ResponseEntity.ok(artists);
     }
 
     @PostMapping

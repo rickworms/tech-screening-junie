@@ -67,7 +67,7 @@ class MusicApiApplicationTest {
     @Test
     void metalArtistsFilterWorks() {
         // Verify that Metal artists filtering works
-        var metalArtists = artistService.getMetalArtists();
+        var metalArtists = artistService.getArtistsByGenre("Metal");
 
         assertFalse(metalArtists.isEmpty(), "Should find Metal artists");
         logger.info("[DEBUG_LOG] Found {} Metal artists", metalArtists.size());

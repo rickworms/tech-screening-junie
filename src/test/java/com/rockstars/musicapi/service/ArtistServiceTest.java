@@ -101,14 +101,14 @@ class ArtistServiceTest {
     }
 
     @Test
-    void getMetalArtists_ShouldReturnArtistsWithMetalSongs() {
+    void getArtistsByGenre_ShouldReturnArtistsWithSpecifiedGenreSongs() {
         // Given
         List<Song> metalSongs = Arrays.asList(testMetalSong);
         when(songRepository.findByGenreIgnoreCase("Metal")).thenReturn(metalSongs);
         when(artistRepository.findByNameIgnoreCase("Metallica")).thenReturn(Optional.of(testArtist));
 
         // When
-        List<Artist> result = artistService.getMetalArtists();
+        List<Artist> result = artistService.getArtistsByGenre("Metal");
 
         // Then
         assertEquals(1, result.size());
@@ -118,12 +118,12 @@ class ArtistServiceTest {
     }
 
     @Test
-    void getMetalArtists_WhenNoMetalSongs_ShouldReturnEmptyList() {
+    void getArtistsByGenre_WhenNoSongsOfSpecifiedGenre_ShouldReturnEmptyList() {
         // Given
         when(songRepository.findByGenreIgnoreCase("Metal")).thenReturn(Arrays.asList());
 
         // When
-        List<Artist> result = artistService.getMetalArtists();
+        List<Artist> result = artistService.getArtistsByGenre("Metal");
 
         // Then
         assertTrue(result.isEmpty());

@@ -52,21 +52,22 @@ public class ArtistService {
     }
 
     /**
-     * Finds all artists with Metal genre songs.
-     * This method filters songs by "Metal" genre and returns unique artists.
+     * Finds all artists with songs in the specified genre.
+     * This method filters songs by the given genre and returns unique artists.
      * 
-     * @return List of artists who have Metal songs
+     * @param genre the genre to search for
+     * @return List of artists who have songs in the specified genre
      */
-    public List<Artist> getMetalArtists() {
-        // Get all Metal songs
-        List<String> metalArtistNames = songRepository.findByGenreIgnoreCase("Metal")
+    public List<Artist> getArtistsByGenre(String genre) {
+        // Get all songs of the specified genre
+        List<String> artistNames = songRepository.findByGenreIgnoreCase(genre)
                 .stream()
                 .map(song -> song.getArtist())
                 .distinct()
                 .collect(Collectors.toList());
 
         // Find corresponding Artist objects
-        return metalArtistNames.stream()
+        return artistNames.stream()
                 .map(artistRepository::findByNameIgnoreCase)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
