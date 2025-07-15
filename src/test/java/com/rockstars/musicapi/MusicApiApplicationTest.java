@@ -79,7 +79,7 @@ class MusicApiApplicationTest {
     }
 
     @Test
-    void songsBefor2016FilterWorks() {
+    void songsBefore2016FilterWorks() {
         // Verify that songs before 2016 filtering works
         var songsBefore2016 = songService.getSongsReleasedBefore2016();
 
