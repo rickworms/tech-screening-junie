@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,14 +25,11 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1/songs")
 @Tag(name = "Songs", description = "Song management operations")
+@RequiredArgsConstructor
 public class SongController {
-    
+
     private final SongService songService;
-    
-    public SongController(SongService songService) {
-        this.songService = songService;
-    }
-    
+
     @GetMapping
     @Operation(summary = "Get all songs", description = "Retrieves a list of all songs")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved songs")
@@ -39,7 +37,7 @@ public class SongController {
         List<Song> songs = songService.getAllSongs();
         return ResponseEntity.ok(songs);
     }
-    
+
     @GetMapping("/{id}")
     @Operation(summary = "Get song by ID", description = "Retrieves a specific song by its ID")
     @ApiResponses({
@@ -52,7 +50,7 @@ public class SongController {
         return song.map(ResponseEntity::ok)
                   .orElse(ResponseEntity.notFound().build());
     }
-    
+
     @GetMapping("/search")
     @Operation(summary = "Search songs by name", description = "Searches for songs by name (case-insensitive partial match)")
     @ApiResponse(responseCode = "200", description = "Search completed successfully")
@@ -61,7 +59,7 @@ public class SongController {
         List<Song> songs = songService.searchSongsByName(name);
         return ResponseEntity.ok(songs);
     }
-    
+
     @GetMapping("/genre/{genre}")
     @Operation(summary = "Get songs by genre", description = "Retrieves all songs of a specific genre")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved songs by genre")
@@ -70,7 +68,7 @@ public class SongController {
         List<Song> songs = songService.getSongsByGenre(genre);
         return ResponseEntity.ok(songs);
     }
-    
+
     @GetMapping("/artist/{artistName}")
     @Operation(summary = "Get songs by artist", description = "Retrieves all songs by a specific artist")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved songs by artist")
@@ -79,7 +77,7 @@ public class SongController {
         List<Song> songs = songService.getSongsByArtist(artistName);
         return ResponseEntity.ok(songs);
     }
-    
+
     @GetMapping("/before-year/{year}")
     @Operation(summary = "Get songs released before year", description = "Retrieves all songs released before the specified year")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved songs released before the specified year")
@@ -88,7 +86,7 @@ public class SongController {
         List<Song> songs = songService.getSongsReleasedBefore(year);
         return ResponseEntity.ok(songs);
     }
-    
+
     @GetMapping("/before-2016")
     @Operation(summary = "Get songs released before 2016", description = "Retrieves all songs released before 2016 (specific requirement)")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved songs released before 2016")
@@ -96,7 +94,7 @@ public class SongController {
         List<Song> songs = songService.getSongsReleasedBefore2016();
         return ResponseEntity.ok(songs);
     }
-    
+
     @GetMapping("/filter")
     @Operation(summary = "Filter songs by genre and year", description = "Retrieves songs by genre released before the specified year")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved filtered songs")
@@ -106,7 +104,7 @@ public class SongController {
         List<Song> songs = songService.getSongsByGenreAndYearBefore(genre, year);
         return ResponseEntity.ok(songs);
     }
-    
+
     @PostMapping
     @Operation(summary = "Create new song", description = "Creates a new song")
     @ApiResponses({
@@ -117,7 +115,7 @@ public class SongController {
         Song createdSong = songService.createSong(song);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdSong);
     }
-    
+
     @PutMapping("/{id}")
     @Operation(summary = "Update song", description = "Updates an existing song")
     @ApiResponses({
@@ -135,7 +133,7 @@ public class SongController {
             return ResponseEntity.notFound().build();
         }
     }
-    
+
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete song", description = "Deletes a song by ID")
     @ApiResponses({

@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Objects;
 
@@ -15,6 +18,9 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "songs")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Song {
 
     @Id
@@ -60,131 +66,4 @@ public class Song {
 
     @JsonProperty("Album")
     private String album;
-
-    // Default constructor for Jackson
-    public Song() {}
-
-    public Song(Long id, String name, Integer year, String artist, String shortname, 
-                Integer bpm, Long duration, String genre, String spotifyId, String album) {
-        this.id = id;
-        this.name = name;
-        this.year = year;
-        this.artist = artist;
-        this.shortname = shortname;
-        this.bpm = bpm;
-        this.duration = duration;
-        this.genre = genre;
-        this.spotifyId = spotifyId;
-        this.album = album;
-    }
-
-    // Getters and setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getYear() {
-        return year;
-    }
-
-    public void setYear(Integer year) {
-        this.year = year;
-    }
-
-    public String getArtist() {
-        return artist;
-    }
-
-    public void setArtist(String artist) {
-        this.artist = artist;
-    }
-
-    public String getShortname() {
-        return shortname;
-    }
-
-    public void setShortname(String shortname) {
-        this.shortname = shortname;
-    }
-
-    public Integer getBpm() {
-        return bpm;
-    }
-
-    public void setBpm(Integer bpm) {
-        this.bpm = bpm;
-    }
-
-    public Long getDuration() {
-        return duration;
-    }
-
-    public void setDuration(Long duration) {
-        this.duration = duration;
-    }
-
-    public String getGenre() {
-        return genre;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
-    }
-
-    public String getSpotifyId() {
-        return spotifyId;
-    }
-
-    public void setSpotifyId(String spotifyId) {
-        this.spotifyId = spotifyId;
-    }
-
-    public String getAlbum() {
-        return album;
-    }
-
-    public void setAlbum(String album) {
-        this.album = album;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Song song = (Song) o;
-        return Objects.equals(id, song.id) && 
-               Objects.equals(name, song.name) && 
-               Objects.equals(year, song.year) && 
-               Objects.equals(artist, song.artist) && 
-               Objects.equals(genre, song.genre);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, year, artist, genre);
-    }
-
-    @Override
-    public String toString() {
-        return "Song{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", year=" + year +
-                ", artist='" + artist + '\'' +
-                ", genre='" + genre + '\'' +
-                ", album='" + album + '\'' +
-                '}';
-    }
 }

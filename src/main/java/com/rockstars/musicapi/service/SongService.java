@@ -2,6 +2,7 @@ package com.rockstars.musicapi.service;
 
 import com.rockstars.musicapi.model.Song;
 import com.rockstars.musicapi.repository.SongRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,13 +14,10 @@ import java.util.Optional;
  * Handles CRUD operations and business rules for songs.
  */
 @Service
+@RequiredArgsConstructor
 public class SongService {
 
     private final SongRepository songRepository;
-
-    public SongService(SongRepository songRepository) {
-        this.songRepository = songRepository;
-    }
 
     /**
      * Retrieves all songs.

@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,14 +25,11 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1/artists")
 @Tag(name = "Artists", description = "Artist management operations")
+@RequiredArgsConstructor
 public class ArtistController {
-    
+
     private final ArtistService artistService;
-    
-    public ArtistController(ArtistService artistService) {
-        this.artistService = artistService;
-    }
-    
+
     @GetMapping
     @Operation(summary = "Get all artists", description = "Retrieves a list of all artists")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved artists")
@@ -39,7 +37,7 @@ public class ArtistController {
         List<Artist> artists = artistService.getAllArtists();
         return ResponseEntity.ok(artists);
     }
-    
+
     @GetMapping("/{id}")
     @Operation(summary = "Get artist by ID", description = "Retrieves a specific artist by their ID")
     @ApiResponses({
@@ -52,7 +50,7 @@ public class ArtistController {
         return artist.map(ResponseEntity::ok)
                     .orElse(ResponseEntity.notFound().build());
     }
-    
+
     @GetMapping("/search")
     @Operation(summary = "Search artists by name", description = "Searches for artists by name (case-insensitive partial match)")
     @ApiResponse(responseCode = "200", description = "Search completed successfully")
@@ -61,7 +59,7 @@ public class ArtistController {
         List<Artist> artists = artistService.searchArtistsByName(name);
         return ResponseEntity.ok(artists);
     }
-    
+
     @GetMapping("/metal")
     @Operation(summary = "Get Metal artists", description = "Retrieves all artists who have songs in the Metal genre")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved Metal artists")
@@ -69,7 +67,7 @@ public class ArtistController {
         List<Artist> metalArtists = artistService.getMetalArtists();
         return ResponseEntity.ok(metalArtists);
     }
-    
+
     @PostMapping
     @Operation(summary = "Create new artist", description = "Creates a new artist")
     @ApiResponses({
@@ -84,7 +82,7 @@ public class ArtistController {
             return ResponseEntity.badRequest().build();
         }
     }
-    
+
     @PutMapping("/{id}")
     @Operation(summary = "Update artist", description = "Updates an existing artist")
     @ApiResponses({
@@ -105,7 +103,7 @@ public class ArtistController {
             return ResponseEntity.badRequest().build();
         }
     }
-    
+
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete artist", description = "Deletes an artist by ID")
     @ApiResponses({

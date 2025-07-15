@@ -3,6 +3,7 @@ package com.rockstars.musicapi.service;
 import com.rockstars.musicapi.model.Artist;
 import com.rockstars.musicapi.repository.ArtistRepository;
 import com.rockstars.musicapi.repository.SongRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,15 +16,11 @@ import java.util.stream.Collectors;
  * Handles CRUD operations and business rules for artists.
  */
 @Service
+@RequiredArgsConstructor
 public class ArtistService {
 
     private final ArtistRepository artistRepository;
     private final SongRepository songRepository;
-
-    public ArtistService(ArtistRepository artistRepository, SongRepository songRepository) {
-        this.artistRepository = artistRepository;
-        this.songRepository = songRepository;
-    }
 
     /**
      * Retrieves all artists.
